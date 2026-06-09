@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premios de Verano 2026 | Fito, S.L.</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-color: #f8fafc;
+            --wheel-border: #334155;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        /* Contenedor de la Ruleta */
+        .wheel-container {
+            position: relative;
+            margin: 3rem auto;
+            width: 360px;
+            height: 360px;
+        }
+
+        /* El marcador/flecha */
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 30px solid #f43f5e;
+            z-index: 10;
+            filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.3));
+        }
+
+        canvas {
+            border-radius: 50%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 0 10px var(--wheel-border);
+            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        /* Botón de acción */
+        .spin-btn {
+            display: block;
+            margin: 1rem auto;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .spin-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+        }
+
+        .spin-btn:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Pantalla de Mensajes y Popups */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid #334155;
+            animation: scaleUp 0.4s ease forwards;
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal h2 {
+            font-size: 2rem;
+            margin-top: 0;
+        }
+
+        .modal p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .modal-btn {
+            margin-top: 1.5rem;
+            padding: 0.75rem 2rem;
+            background-color: var(--accent-color);
+            color: #0f172a;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .modal-btn:hover {
+            background-color: #7dd3fc;
+        }
+
+        /* Estilos específicos para el drama */
+        .sad-title { color: #ef4444; }
+        .lucky-title { color: #10b981; }
+        
+        /* Contenedor de la imagen del premio final */
+        #prize-image-container {
+            margin-top: 1.5rem;
+            display: none;
+        }
+        #prize-image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border: 2px solid #334155;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Gran Ruleta de Verano</h1>
+        <p class="subtitle">Campaña Oficial de Fito, S.L.</p>
+    </header>
+
+    <div class="wheel-container">
+        <div class="pointer"></div>
+        <canvas id="wheel" width="360" height="360"></canvas>
+    </div>
+
+    <button id="spin-trigger" class="spin-btn">¡Tirar de la Ruleta!</button>
+
+    <div id="modal-sad" class="modal">
+        <div class="modal-content">
+            <h2 class="sad-title">Oh... Vaya 😢</h2>
+            <p>Mala suerte, ha tocado: <strong>"Otra vez será"</strong>.</p>
+            <hr style="border-color: #334155; margin: 1.5rem 0;">
+            <h3 class="lucky-title" style="margin-bottom:0.5rem;">¡ESPERA UN MOMENTO! ⚡</h3>
+            <p>El sistema de Fito, S.L. ha detectado una anomalía climática de verano... ¡TIENES UNA SEGUNDA OPORTUNIDAD EXTRA!</p>
+            <button class="modal-btn" onclick="closeModal('modal-sad')">Aceptar Regalo 🎁</button>
+        </div>
+    </div>
+
+    <div id="modal-win" class="modal">
+        <div class="modal-content">
+            <h2 class="lucky-title">¡BRUTAL! 🎉</h2>
+            <p>¡La segunda tirada ha sido la vencida! Te acabas de llevar:</p>
+            <h1 style="margin: 0.5rem 0; font-size: 3rem;">1.000€</h1>
+            <p>En efectivo para gastar este verano.</p>
+            
+            <div id="prize-image-container">
+                <img src="imagen.jpg" alt="Premio 1000 euros de Fito, S.L.">
+            </div>
+
+            <button class="modal-btn" style="background-color: #10b981; color: white;" onclick="closeModal('modal-win')">¡A reclamarlo!</button>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 by Fito, S.L. Todos los derechos reservados.
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const spinBtn = document.getElementById('spin-trigger');
+
+        // Lista de premios actualizada
+        const prizes = [
+            "Perrito Piloto", 
+            "1000€", 
+            "Piso en Torrevieja", 
+            "Ferrari", 
+            "Fanega de Olivos", 
+            "Kit Supervivencia", 
+            "Otra vez será"
+        ];
+
+        const colors = ['#1e1b4b', '#312e81', '#3a3380', '#4338ca', '#5850ec', '#6366f1', '#4f46e5'];
+        const numSlices = prizes.length;
+        const sliceAngle = (2 * Math.PI) / numSlices;
+        let currentRotation = 0;
+        let isFirstSpin = true;
+
+        // Dibujar la ruleta
+        function drawWheel() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < numSlices; i++) {
+                const angle = i * sliceAngle;
+                
+                ctx.beginPath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.moveTo(180, 180);
+                ctx.arc(180, 180, 180, angle, angle + sliceAngle);
+                ctx.lineTo(180, 180);
+                ctx.fill();
+                ctx.strokeStyle = '#0f172a';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(180, 180);
+                ctx.rotate(angle + sliceAngle / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#f8fafc";
+                ctx.font = "bold 13px sans-serif";
+                
+                let text = prizes[i];
+                if(text.length > 15) text = text.substring(0,13) + '...';
+                ctx.fillText(text, 160, 5);
+                ctx.restore();
+            }
+
+            // Centro estético
+            ctx.beginPath();
+            ctx.arc(180, 180, 35, 0, 2 * Math.PI);
+            ctx.fillStyle = '#0f172a';
+            ctx.fill();
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        // Posicionar el premio seleccionado justo debajo del marcador (arriba)
+        function getAnglesForPrize(prizeIndex) {
+            const prizeCenterAngle = (prizeIndex * sliceAngle) + (sliceAngle / 2);
+            let targetAngle = (1.5 * Math.PI) - prizeCenterAngle;
+            if (targetAngle < 0) targetAngle += 2 * Math.PI;
+            return targetAngle;
+        }
+
+        function spinWheel() {
+            spinBtn.disabled = true;
+            let targetPrizeIndex;
+
+            if (isFirstSpin) {
+                targetPrizeIndex = prizes.indexOf("Otra vez será");
+            } else {
+                targetPrizeIndex = prizes.indexOf("1000€");
+            }
+
+            const targetAngle = getAnglesForPrize(targetPrizeIndex);
+            const extraRotations = 5 * 2 * Math.PI; // 5 vueltas completas de inercia
+            
+            currentRotation += extraRotations + targetAngle - (currentRotation % (2 * Math.PI));
+            canvas.style.transform = `rotate(${currentRotation}rad)`;
+
+            setTimeout(() => {
+                if (isFirstSpin) {
+                    document.getElementById('modal-sad').style.display = 'flex';
+                    isFirstSpin = false;
+                    spinBtn.disabled = false;
+                    spinBtn.innerText = "¡Tirar otra vez! (Gratis)";
+                    spinBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+                } else {
+                    document.getElementById('modal-win').style.display = 'flex';
+                    document.getElementById('prize-image-container').style.display = 'block';
+                    spinBtn.innerText = "¡Premio Entregado!";
+                }
+            }, 4000); // 4 segundos de giro
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        spinBtn.addEventListener('click', spinWheel);
+        drawWheel();
+    </script>
+</body>
+</html>
