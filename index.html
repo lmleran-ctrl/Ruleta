@@ -3,22 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>La Gran Ruleta de Verano 2026</title>
+    <title>La Gran Ruleta de Verano 2026 | Fito, S.L.</title>
     <style>
-        /* Variables de color Premium */
         :root {
-            --bg-summer: #0084c7; /* Azul mar base */
-            --prize-red: #da291c; /* Rojo Ferrari */
-            --prize-blue: #00569e; /* Azul Piso */
-            --prize-gold: #f59e0b; /* Oro Perrito */
-            --prize-green-light: #a3e635; /* Verde Olivo */
-            --prize-green-dark: #15803d; /* Verde 1000€ */
-            --text-main: #ffffff;
-            --text-accent: #fcd34d;
+            --bg-summer: #0084c7;
+            --accent-yellow: #fcd34d;
+            --text-light: #ffffff;
+            --font-family: 'Montserrat', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
-        /* Configuración Global de Pantalla Completa */
-        *, *::before, *::after {
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -27,345 +21,458 @@
         html, body {
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Evitar scroll incómodo */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            font-family: var(--font-family);
             background-color: var(--bg-summer);
-            color: var(--text-main);
+            color: var(--text-light);
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Contenedor Adaptativo de Pantalla Completa */
-        #main-container {
-            width: 100vw;
-            height: 100vh;
+        /* Contenedor principal estilo App Fullscreen */
+        #app-container {
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            background-image: 
-                linear-gradient(135deg, rgba(218, 41, 28, 0.2) 0%, rgba(0, 132, 199, 0) 50%),
-                url('imagen.png'); /* Reemplazar por tu fondo de playa completo */
-            background-size: cover;
-            background-position: center bottom;
-            background-repeat: no-repeat;
-            padding: 2.5rem 1rem env(safe-area-inset-bottom) 1rem;
             position: relative;
+            padding: 2vh 2vw env(safe-area-inset-bottom) 2vw;
+            
+            /* Degradado veraniego que simula la estética de la imagen original */
+            background: linear-gradient(180deg, #0284c7 0%, #0ea5e9 40%, #f59e0b 85%, #f97316 100%);
+            background-size: cover;
+            background-position: center;
         }
 
-        /* Textos Principales y Branding - Ajuste Dinámico */
-        #header {
+        /* Cabecera estilizada y blindada contra solapamientos de texto */
+        #header-section {
             text-align: center;
             width: 100%;
             max-width: 600px;
+            padding: 10px;
+            z-index: 5;
         }
 
-        h1#brand-title {
-            font-size: 8vw; /* Escala con el ancho */
-            max-size: 2.5rem;
+        .main-title {
+            font-size: min(2.5rem, 7vw);
+            font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 800;
+            line-height: 1.1;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            color: var(--text-light);
         }
 
-        h1#brand-title strong { color: var(--text-accent); }
+        .main-title span {
+            color: var(--accent-yellow);
+            display: inline-block;
+        }
 
-        h2#prize-slogan {
-            font-size: 4vw; /* Escala con el ancho */
-            max-size: 1.1rem;
+        .slogan {
+            font-size: min(1.1rem, 4vw);
+            font-weight: 600;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.7);
-            letter-spacing: 0.5px;
-            font-weight: 400;
+            letter-spacing: 2px;
+            margin-top: 5px;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        /* Contenedor Responsivo de la Ruleta */
-        #wheel-wrapper {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            max-width: 380px; /* Tamaño máximo en PC */
-            margin: auto 0;
+        /* Área central adaptativa para la ruleta */
+        #wheel-zone {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
+            max-height: 55vh;
+            position: relative;
+            z-index: 4;
         }
 
-        /* El marcador superior fijo */
-        #pointer {
+        .wheel-outer-box {
+            position: relative;
+            width: 85vw;
+            height: 85vw;
+            max-width: 380px;
+            max-height: 380px;
+            aspect-ratio: 1 / 1;
+        }
+
+        /* Puntero/Flecha indicadora superior */
+        #wheel-pointer {
             position: absolute;
-            top: -20px;
+            top: -15px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-top: 30px solid #ffffff;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 28px solid #ef4444;
             z-index: 10;
-            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
         }
 
-        /* Canvas nativo adaptado por CSS */
-        canvas {
+        #wheel-canvas {
             width: 100% !important;
             height: 100% !important;
             border-radius: 50%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 8px rgba(255, 255, 255, 0.1);
-            transition: transform 4.5s cubic-bezier(0.2, 0.8, 0.25, 1); /* Curva suave */
+            box-shadow: 0 14px 28px rgba(0,0,0,0.35), 0 10px 10px rgba(0,0,0,0.3);
+            transition: transform 4.5s cubic-bezier(0.15, 0.85, 0.2, 1);
+            background-color: #ffffff;
         }
 
-        /* Botón de acción - Ajustado para pulgar en móvil */
-        .spin-btn {
-            width: 90%;
-            max-width: 300px;
-            margin: 0.5rem 0 0 0;
-            padding: 1.1rem;
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #000000;
-            background: #ffffff;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            transition: all 0.2s ease;
+        /* Zona inferior de control */
+        #control-zone {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            z-index: 5;
+        }
+
+        .action-btn {
+            width: 85vw;
+            max-width: 320px;
+            padding: 16px 20px;
+            font-size: min(1.25rem, 5vw);
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border: 3px solid #ffffff;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .spin-btn:hover:not(:disabled) {
+        .action-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+            filter: brightness(1.1);
         }
 
-        .spin-btn:active:not(:disabled) {
+        .action-btn:active:not(:disabled) {
             transform: translateY(1px);
         }
 
-        .spin-btn:disabled {
-            background: #cbd5e1;
-            color: #64748b;
+        .action-btn:disabled {
+            background: #94a3b8;
+            border-color: #cbd5e1;
+            color: #cbd5e1;
             cursor: not-allowed;
             box-shadow: none;
+            transform: none;
         }
 
-        /* Ventanas Modales */
-        .modal {
+        /* Ventanas emergentes / Modales */
+        .modal-overlay {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             justify-content: center;
             align-items: center;
             z-index: 100;
-            padding: 1rem;
+            padding: 20px;
         }
 
-        .modal-content {
-            background-color: #ffffff;
-            color: #000000;
-            padding: 2.5rem;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 400px;
+        .modal-card {
+            background: #ffffff;
+            color: #0f172a;
             width: 100%;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-            animation: scaleUp 0.4s ease forwards;
+            max-width: 420px;
+            border-radius: 24px;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        @keyframes scaleUp {
+        @keyframes popIn {
             from { transform: scale(0.85); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
 
-        .modal h2 {
+        .modal-card h3 {
             font-size: 1.8rem;
-            margin-bottom: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 10px;
         }
 
-        .modal p {
-            font-size: 1.1rem;
+        .modal-card p {
+            font-size: 1.05rem;
             color: #475569;
             line-height: 1.5;
-            margin-bottom: 1.5rem;
+            margin-bottom: 20px;
         }
 
-        .modal-btn {
-            padding: 0.85rem 2rem;
-            background-color: #000000;
-            color: #ffffff;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .modal-btn:hover {
-            opacity: 0.85;
-        }
-
-        .sad-title { color: #dc2626; }
-        .lucky-title { color: #15803d; }
-        
-        /* Contenedor de la Imagen Final que Ocupa la Pantalla */
-        #prize-image-container {
-            margin: 1.25rem 0;
+        .modal-action-btn {
             width: 100%;
-            min-height: 200px;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 14px;
+            background: #0084c7;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .modal-action-btn:hover {
+            background: #0284c7;
+        }
+
+        /* PANTALLA COMPLETA TOTAL PARA EL PREMIO FINAL ("imagen") */
+        #fullscreen-win-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            z-index: 200;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4vh 4vw;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Contenedor adaptativo para que la imagen ocupe TODO el fondo */
+        .win-image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #f1f5f9;
-            border-radius: 12px;
-            position: relative;
+            background: #1e293b;
         }
 
-        #prize-image-container img {
-            max-width: 100%;
-            max-height: 250px;
-            object-fit: contain;
-            border-radius: 8px;
-            display: none; /* Se activa por JS */
-        }
-
-        #error-image-msg {
-            display: none;
-            color: #dc2626;
-            font-weight: bold;
-        }
-
-        footer {
-            margin-top: 1rem;
-            padding: 0.5rem;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 0.75rem;
+        .win-image-container img {
             width: 100%;
-            text-align: center;
+            height: 100%;
+            object-fit: cover; /* Ocupa la pantalla completa adaptada sin deformarse */
         }
 
+        /* Capa superior de textos informativos flotando sobre la imagen */
+        .win-foreground-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: auto;
+        }
+
+        .win-foreground-content h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #34d399;
+            text-transform: uppercase;
+        }
+
+        .win-foreground-content p {
+            font-size: 1.1rem;
+            color: #f1f5f9;
+            margin-top: 5px;
+        }
+
+        .claim-btn {
+            position: relative;
+            z-index: 2;
+            width: 90%;
+            max-width: 340px;
+            padding: 16px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #ffffff;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: 2px solid #ffffff;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: auto;
+        }
+
+        .copyright {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="main-container">
-        <header id="header">
-            <h1 id="brand-title">La Gran <strong>Ruleta</strong> de Verano</h1>
-            <h2 id="prize-slogan">Premios Increíbles</h2>
+    <div id="app-container">
+        <header id="header-section">
+            <h1 class="main-title">La Gran<br><span>Ruleta de Verano</span></h1>
+            <p class="slogan">Premios Increíbles</p>
         </header>
 
-        <div id="wheel-wrapper">
-            <div id="pointer"></div>
-            <canvas id="wheel" width="360" height="360"></canvas>
-        </div>
-
-        <button id="spin-trigger" class="spin-btn">¡Gira y Gana!</button>
-
-        <footer>
-            &copy; 2026 by Fito, S.L. &bull; Todos los derechos reservados.
-        </footer>
-    </div>
-
-    <div id="modal-sad" class="modal">
-        <div class="modal-content">
-            <h2 class="sad-title">Oh... Vaya 😢</h2>
-            <p>Mala suerte, ha tocado: <strong>"Otra vez será"</strong>.</p>
-            <div style="height: 1px; background: #e2e8f0; margin: 1rem 0;"></div>
-            <h3 class="lucky-title" style="margin-bottom:0.5rem;">¡ESPERA UN MOMENTO! ⚡</h3>
-            <p>¡El sistema de Fito, S.L. ha detectado una anomalía climática veraniega... **¡TIENES UNA SEGUNDA TIRADA EXTRA INMEDIATA!**</p>
-            <button class="modal-btn" onclick="closeModal('modal-sad')">Girar otra vez 🎁</button>
-        </div>
-    </div>
-
-    <div id="modal-win" class="modal">
-        <div class="modal-content">
-            <h2 class="lucky-title">¡BRUTAL! 🎉</h2>
-            <p>¡La segunda tirada ha sido la vencida! Te llevas:</p>
-            <h1 style="margin: 0.25rem 0; font-size: 3rem;">1.000€</h1>
-            <p>En efectivo para gastar este verano.</p>
-            
-            <div id="prize-image-container">
-                <span id="error-image-msg">¡Disfruta de tus 1000€!</span>
-                <img id="prize-img" alt="Premio 1000 euros de Fito, S.L.">
+        <div id="wheel-zone">
+            <div class="wheel-outer-box">
+                <div id="wheel-pointer"></div>
+                <canvas id="wheel-canvas" width="800" height="800"></canvas>
             </div>
-
-            <button class="modal-btn" style="background-color: #15803d; color: white;" onclick="closeModal('modal-win')">¡Reclamar Premio!</button>
         </div>
+
+        <div id="control-zone">
+            <button id="spin-btn" class="action-btn">¡Gira y Gana!</button>
+            <p class="copyright">&copy; 2026 by Fito, S.L. &bull; Todos los derechos reservados.</p>
+        </div>
+    </div>
+
+    <div id="sad-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 style="color: #ef4444;">¡Oh, qué lástima! 😢</h3>
+            <p>Ha tocado: <strong style="color: #ef4444;">"Otra vez será"</strong>.</p>
+            <div style="height: 1px; background: #e2e8f0; margin: 15px 0;"></div>
+            <h4 style="color: #10b981; font-weight: 800; font-size: 1.2rem; margin-bottom: 5px;">¡ATENCIÓN! ⚡</h4>
+            <p>Fito, S.L. premia tu fidelidad veraniega. ¡El sistema te concede una <strong>Segunda Tirada Extra de la Suerte</strong> totalmente gratis!</p>
+            <button class="modal-action-btn" style="background: #10b981;" onclick="closeSadModal()">Tirar de Nuevo 🎁</button>
+        </div>
+    </div>
+
+    <div id="fullscreen-win-overlay">
+        <div class="win-image-container">
+            <img id="prize-full-img" alt="Premio Final">
+        </div>
+
+        <div class="win-foreground-content">
+            <h2>¡BRUTAL! 🎉</h2>
+            <p>¡La segunda tirada ha sido mágica! Te has llevado el premio gordo:</p>
+            <h1 style="font-size: 3.2rem; font-weight: 900; color: #fff; margin-top: 5px; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">1.000€</h1>
+            <p style="color: #fcd34d; font-weight: bold;">En efectivo para disfrutar este verano</p>
+        </div>
+
+        <button class="claim-btn" onclick="alert('¡Felicidades! Ponte en contacto con Fito, S.L. para tramitar tus 1000€.')">Reclamar Premio 💸</button>
     </div>
 
     <script>
-        const canvas = document.getElementById('wheel');
+        const canvas = document.getElementById('wheel-canvas');
         const ctx = canvas.getContext('2d');
-        const spinBtn = document.getElementById('spin-trigger');
+        const spinBtn = document.getElementById('spin-btn');
 
-        // Configuración de premios estructurada para que no se corten en móvil
+        // Configuración exacta de sectores coordinada con la paleta de colores original
         const prizes = [
-            { text: "Perrito Piloto", icon: "🐶", color: '#f59e0b' },
-            { text: "1.000€", icon: "💰", color: '#15803d' },
-            { text: "Piso Torrevieja", icon: "🏢", color: '#00569e' },
-            { text: "Ferrari", icon: "🏎️", color: '#da291c' },
-            { text: "Fanega Olivos", icon: "🫒", color: '#a3e635' },
-            { text: "Kit Supervivencia", icon: "🎒", color: '#a3e635' }, // Duplicado para equilibrar (7 sectores)
-            { text: "Otra vez será", icon: "❌", color: '#da291c' }
+            { text: "Perrito Piloto", icon: "🐶", color: "#f59e0b" },
+            { text: "1.000€", icon: "💰", color: "#15803d" },
+            { text: "Piso Torrevieja", icon: "🏢", color: "#00569e" },
+            { text: "Ferrari", icon: "🏎️", color: "#da291c" },
+            { text: "Fanega Olivos", icon: "🫒", color: "#84cc16" },
+            { text: "Kit Supervivencia", icon: "🎒", color: "#06b6d4" },
+            { text: "Otra vez será", icon: "❌", color: "#475569" }
         ];
 
-        // Paleta de colores Premium
-        const colors = ['#f59e0b', '#15803d', '#00569e', '#da291c', '#a3e635', '#a3e635', '#da291c'];
         const numSlices = prizes.length;
         const sliceAngle = (2 * Math.PI) / numSlices;
         let currentRotation = 0;
         let isFirstSpin = true;
 
-        // Dibujar la ruleta nativamente
+        // Renderizado del Canvas gráfico de la ruleta sin desbordamientos
         function drawWheel() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const center = canvas.width / 2;
-            const radius = canvas.width / 2 - 10;
+            const radius = center - 20;
 
             for (let i = 0; i < numSlices; i++) {
                 const angle = i * sliceAngle;
                 
-                // Porción
+                // Dibujar sector
                 ctx.beginPath();
-                ctx.fillStyle = colors[i % colors.length];
+                ctx.fillStyle = prizes[i].color;
                 ctx.moveTo(center, center);
                 ctx.arc(center, center, radius, angle, angle + sliceAngle);
                 ctx.lineTo(center, center);
                 ctx.fill();
-                ctx.strokeStyle = '#000000';
-                ctx.lineWidth = 1;
+                
+                // Ribete divisorio blanco
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 4;
                 ctx.stroke();
 
-                // Textos compactos con iconos
+                // Añadir los textos radiales adaptativos
                 ctx.save();
                 ctx.translate(center, center);
                 ctx.rotate(angle + sliceAngle / 2);
                 ctx.textAlign = "right";
+                ctx.textBaseline = "middle";
                 ctx.fillStyle = "#ffffff";
-                ctx.font = "bold 13px system-ui";
-                ctx.fillText(prizes[i].text + " " + prizes[i].icon, radius - 30, 0);
+                
+                ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+                ctx.shadowBlur = 4;
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
+
+                ctx.font = "bold 26px var(--font-family)";
+                
+                let displayText = prizes[i].text;
+                if (displayText.length > 14) {
+                    ctx.font = "bold 20px var(--font-family)";
+                }
+                
+                ctx.fillText(displayText + " " + prizes[i].icon, radius - 40, 0);
                 ctx.restore();
             }
 
-            // Centro estético
+            // Corona exterior circular
             ctx.beginPath();
-            ctx.arc(center, center, 35, 0, 2 * Math.PI);
-            ctx.fillStyle = '#000000';
-            ctx.fill();
+            ctx.arc(center, center, radius, 0, 2 * Math.PI);
             ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 8;
             ctx.stroke();
+
+            // Botón central con icono de rayo energético
+            ctx.beginPath();
+            ctx.arc(center, center, 60, 0, 2 * Math.PI);
             ctx.fillStyle = '#ffffff';
-            ctx.font = "bold 20px sans-serif";
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(center, center, 50, 0, 2 * Math.PI);
+            ctx.fillStyle = '#0f172a';
+            ctx.fill();
+            
+            ctx.fillStyle = '#fcd34d';
+            ctx.font = "bold 36px sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText("⚡", center, center);
         }
 
-        // Corrección de física angular: El puntero está fijo en el NORTE (1.5 * Math.PI)
+        // Posicionamiento angular (Puntero fijo a las 12 en punto)
         function getAnglesForPrize(prizeIndex) {
             const prizeCenterAngle = (prizeIndex * sliceAngle) + (sliceAngle / 2);
             let targetAngle = (1.5 * Math.PI) - prizeCenterAngle;
@@ -375,77 +482,68 @@
 
         function spinWheel() {
             spinBtn.disabled = true;
-            let targetPrizeIndex;
+            let targetIndex;
 
             if (isFirstSpin) {
-                targetPrizeIndex = prizes.findIndex(p => p.text === "Otra vez será");
+                targetIndex = prizes.findIndex(p => p.text === "Otra vez será");
             } else {
-                targetPrizeIndex = prizes.findIndex(p => p.text === "1.000€");
+                targetIndex = prizes.findIndex(p => p.text === "1.000€");
             }
 
-            const targetAngle = getAnglesForPrize(targetPrizeIndex);
-            const extraRotations = 6 * 2 * Math.PI; // Vueltas completas
+            const targetAngle = getAnglesForPrize(targetIndex);
+            const extraTurns = 7 * 2 * Math.PI; 
             
-            currentRotation += extraRotations + targetAngle - (currentRotation % (2 * Math.PI));
+            currentRotation += extraTurns + targetAngle - (currentRotation % (2 * Math.PI));
             canvas.style.transform = `rotate(${currentRotation}rad)`;
 
             setTimeout(() => {
                 if (isFirstSpin) {
-                    document.getElementById('modal-sad').style.display = 'flex';
-                    isFirstSpin = false;
-                    spinBtn.disabled = false;
-                    spinBtn.innerText = "¡Tirar otra vez! (Gratis)";
-                    spinBtn.style.background = "#15803d";
-                    spinBtn.style.color = "white";
+                    document.getElementById('sad-modal').style.display = 'flex';
                 } else {
-                    document.getElementById('modal-win').style.display = 'flex';
-                    spinBtn.innerText = "¡Premio Entregado!";
-                    tryLoadPrizeImage(); // Arrancar verificador inteligente de imagen
+                    showFinalWinScreen();
                 }
-            }, 4500); // 4.5 segundos de giro
+            }, 4500);
         }
 
-        // Función inteligente para evitar que la imagen "no aparezca"
-        function tryLoadPrizeImage() {
-            const imgElement = document.getElementById('prize-img');
-            const errMsg = document.getElementById('error-image-msg');
-            
-            // Lista de extensiones más probables para tu archivo "imagen"
-            const extensions = ['jpg', 'png', 'webp'];
-            let currentExtIndex = 0;
+        function closeSadModal() {
+            document.getElementById('sad-modal').style.display = 'none';
+            isFirstSpin = false;
+            spinBtn.disabled = false;
+            spinBtn.innerText = "¡Tirada Extra de la Suerte! 🍀";
+            spinBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
+        }
 
-            function tryNext() {
-                if (currentExtIndex >= extensions.length) {
-                    // Si ya probó todas y ninguna cargó, mostramos el mensaje de respaldo
-                    console.log("No se encontró ningún archivo físico local con el nombre 'imagen'.");
-                    errMsg.style.display = 'block';
-                    imgElement.style.display = 'none';
+        // Carga y despliegue inteligente de la imagen a pantalla completa
+        function showFinalWinScreen() {
+            const winOverlay = document.getElementById('fullscreen-win-overlay');
+            const imgElement = document.getElementById('prize-full-img');
+            
+            const extensions = ['jpg', 'png', 'webp', 'jpeg'];
+            let extIndex = 0;
+
+            function loadAndCheck() {
+                if (extIndex >= extensions.length) {
+                    console.log("Mostrando interfaz limpia de premio.");
+                    document.querySelector('.win-image-container').style.background = "linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%)";
+                    winOverlay.style.display = 'flex';
                     return;
                 }
-                
+
                 const testImg = new Image();
-                const ext = extensions[currentExtIndex];
-                testImg.src = `imagen.${ext}`; // Intenta cargar la imagen
-                
+                testImg.src = `imagen.${extensions[extIndex]}`;
+
                 testImg.onload = function() {
-                    // ¡Éxito! Encontró la imagen. Intercambiamos el diseño.
                     imgElement.src = this.src;
-                    errMsg.style.display = 'none';
-                    imgElement.style.display = 'block';
+                    winOverlay.style.display = 'flex';
                 };
-                
+
                 testImg.onerror = function() {
-                    // Falló este formato, salta al siguiente
-                    currentExtIndex++;
-                    tryNext();
+                    extIndex++;
+                    loadAndCheck();
                 };
             }
 
-            tryNext();
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
+            loadAndCheck();
         }
 
         spinBtn.addEventListener('click', spinWheel);
