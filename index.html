@@ -2,133 +2,139 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Premios de Verano 2026 | Fito, S.L.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>La Gran Ruleta de Verano 2026</title>
     <style>
+        /* Variables de color Premium */
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: #151f32;
-            --accent-color: #00f2fe;
-            --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            --text-color: #f8fafc;
-            --wheel-border: #1e293b;
-            --gold: #f59e0b;
+            --bg-summer: #0084c7; /* Azul mar base */
+            --prize-red: #da291c; /* Rojo Ferrari */
+            --prize-blue: #00569e; /* Azul Piso */
+            --prize-gold: #f59e0b; /* Oro Perrito */
+            --prize-green-light: #a3e635; /* Verde Olivo */
+            --prize-green-dark: #15803d; /* Verde 1000€ */
+            --text-main: #ffffff;
+            --text-accent: #fcd34d;
         }
 
+        /* Configuración Global de Pantalla Completa */
         *, *::before, *::after {
             box-sizing: border-box;
-        }
-
-        body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Evitar scroll incómodo */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-summer);
+            color: var(--text-main);
+        }
+
+        /* Contenedor Adaptativo de Pantalla Completa */
+        #main-container {
+            width: 100vw;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            min-height: 100vh;
-            overflow-x: hidden;
+            background-image: 
+                linear-gradient(135deg, rgba(218, 41, 28, 0.2) 0%, rgba(0, 132, 199, 0) 50%),
+                url('imagen.png'); /* Reemplazar por tu fondo de playa completo */
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            padding: 2.5rem 1rem env(safe-area-inset-bottom) 1rem;
+            position: relative;
         }
 
-        header {
+        /* Textos Principales y Branding - Ajuste Dinámico */
+        #header {
             text-align: center;
-            padding: 1.5rem 1rem 0.5rem 1rem;
             width: 100%;
+            max-width: 600px;
         }
 
-        h1 {
-            font-size: 2rem;
+        h1#brand-title {
+            font-size: 8vw; /* Escala con el ancho */
+            max-size: 2.5rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin: 0 0 0.25rem 0;
-            background: linear-gradient(to right, #00f2fe, #4facfe, #6366f1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
             font-weight: 800;
         }
 
-        .subtitle {
-            color: #64748b;
-            font-size: 0.9rem;
-            margin: 0;
+        h1#brand-title strong { color: var(--text-accent); }
+
+        h2#prize-slogan {
+            font-size: 4vw; /* Escala con el ancho */
+            max-size: 1.1rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 0.5px;
+            font-weight: 400;
         }
 
-        /* Contenedor adaptativo de la Ruleta */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            width: 100%;
-            max-width: 500px;
-            padding: 1rem;
-        }
-
-        .wheel-wrapper {
+        /* Contenedor Responsivo de la Ruleta */
+        #wheel-wrapper {
             position: relative;
             width: 100%;
             aspect-ratio: 1 / 1;
-            max-width: 380px;
-            margin: 0 auto;
+            max-width: 380px; /* Tamaño máximo en PC */
+            margin: auto 0;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* Marcador superior estilo casino moderno */
-        .pointer {
+        /* El marcador superior fijo */
+        #pointer {
             position: absolute;
-            top: -12px;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 18px solid transparent;
-            border-right: 18px solid transparent;
-            border-top: 28px solid #ff2a5f;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 30px solid #ffffff;
             z-index: 10;
-            filter: drop-shadow(0px 4px 8px rgba(255, 42, 95, 0.5));
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
         }
 
+        /* Canvas nativo adaptado por CSS */
         canvas {
             width: 100% !important;
             height: 100% !important;
             border-radius: 50%;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 
-                        0 0 0 8px var(--wheel-border),
-                        0 0 20px rgba(0, 242, 254, 0.15);
-            transition: transform 4.5s cubic-bezier(0.2, 0.8, 0.25, 1);
-            background-color: #0f172a;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 8px rgba(255, 255, 255, 0.1);
+            transition: transform 4.5s cubic-bezier(0.2, 0.8, 0.25, 1); /* Curva suave */
         }
 
-        /* Botón de acción optimizado para móvil */
+        /* Botón de acción - Ajustado para pulgar en móvil */
         .spin-btn {
-            width: 85%;
+            width: 90%;
             max-width: 300px;
-            margin: 1.5rem auto;
-            padding: 1rem 2rem;
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #0b0f19;
-            background: var(--accent-gradient);
+            margin: 0.5rem 0 0 0;
+            padding: 1.1rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #000000;
+            background: #ffffff;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);
-            transition: all 0.25s ease;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
         .spin-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(0, 242, 254, 0.5);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
         }
 
         .spin-btn:active:not(:disabled) {
@@ -136,7 +142,7 @@
         }
 
         .spin-btn:disabled {
-            background: #334155;
+            background: #cbd5e1;
             color: #64748b;
             cursor: not-allowed;
             box-shadow: none;
@@ -150,8 +156,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(7, 10, 19, 0.9);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
             justify-content: center;
             align-items: center;
             z-index: 100;
@@ -159,15 +165,15 @@
         }
 
         .modal-content {
-            background-color: var(--card-bg);
-            padding: 2rem 1.5rem;
-            border-radius: 24px;
+            background-color: #ffffff;
+            color: #000000;
+            padding: 2.5rem;
+            border-radius: 20px;
             text-align: center;
             max-width: 400px;
             width: 100%;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid #24344d;
-            animation: scaleUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            animation: scaleUp 0.4s ease forwards;
         }
 
         @keyframes scaleUp {
@@ -177,241 +183,189 @@
 
         .modal h2 {
             font-size: 1.8rem;
-            margin: 0 0 0.75rem 0;
-            font-weight: 800;
+            margin-bottom: 0.75rem;
         }
 
         .modal p {
-            color: #94a3b8;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            color: #475569;
             line-height: 1.5;
-            margin: 0 0 1rem 0;
+            margin-bottom: 1.5rem;
         }
 
         .modal-btn {
-            width: 100%;
             padding: 0.85rem 2rem;
-            background: var(--accent-gradient);
-            color: #0b0f19;
+            background-color: #000000;
+            color: #ffffff;
             border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1rem;
+            border-radius: 10px;
+            font-weight: bold;
             cursor: pointer;
             transition: opacity 0.2s;
         }
 
         .modal-btn:hover {
-            opacity: 0.9;
+            opacity: 0.85;
         }
 
-        .sad-title { color: #f87171; }
-        .lucky-title { color: #34d399; }
+        .sad-title { color: #dc2626; }
+        .lucky-title { color: #15803d; }
         
-        /* Contenedor Inteligente de la Imagen del Premio */
+        /* Contenedor de la Imagen Final que Ocupa la Pantalla */
         #prize-image-container {
             margin: 1.25rem 0;
             width: 100%;
-            min-height: 150px;
+            min-height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #0f172a;
-            border-radius: 16px;
-            border: 1px dashed #334155;
-            padding: 8px;
+            background: #f1f5f9;
+            border-radius: 12px;
             position: relative;
         }
 
         #prize-image-container img {
             max-width: 100%;
-            max-height: 220px;
+            max-height: 250px;
             object-fit: contain;
-            border-radius: 10px;
-            display: none; /* Se activa por JS si carga con éxito */
+            border-radius: 8px;
+            display: none; /* Se activa por JS */
         }
 
-        /* Tarjeta de premio de respaldo si la imagen física no se encuentra */
-        .fallback-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            color: #f59e0b;
+        #error-image-msg {
+            display: none;
+            color: #dc2626;
             font-weight: bold;
         }
 
-        .fallback-card .icon {
-            font-size: 3.5rem;
-            margin-bottom: 0.5rem;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-            100% { transform: scale(1); }
-        }
-
         footer {
-            padding: 1rem;
-            color: #475569;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            color: rgba(255, 255, 255, 0.3);
             font-size: 0.75rem;
-            text-align: center;
             width: 100%;
+            text-align: center;
         }
 
-        /* Ajustes específicos para pantallas muy pequeñas */
-        @media (max-height: 650px) {
-            h1 { font-size: 1.6rem; }
-            .wheel-wrapper { max-width: 290px; }
-            .spin-btn { margin: 0.75rem auto; padding: 0.8rem 1.5rem; font-size: 1rem; }
-        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Ruleta de Verano</h1>
-        <p class="subtitle">2026 by Fito, S.L.</p>
-    </header>
+    <div id="main-container">
+        <header id="header">
+            <h1 id="brand-title">La Gran <strong>Ruleta</strong> de Verano</h1>
+            <h2 id="prize-slogan">Premios Increíbles</h2>
+        </header>
 
-    <div class="main-content">
-        <div class="wheel-wrapper">
-            <div class="pointer"></div>
-            <canvas id="wheel" width="720" height="720"></canvas>
+        <div id="wheel-wrapper">
+            <div id="pointer"></div>
+            <canvas id="wheel" width="360" height="360"></canvas>
         </div>
 
-        <button id="spin-trigger" class="spin-btn">¡Girar Ruleta!</button>
+        <button id="spin-trigger" class="spin-btn">¡Gira y Gana!</button>
+
+        <footer>
+            &copy; 2026 by Fito, S.L. &bull; Todos los derechos reservados.
+        </footer>
     </div>
 
     <div id="modal-sad" class="modal">
         <div class="modal-content">
             <h2 class="sad-title">Oh... Vaya 😢</h2>
-            <p>El marcador dice: <strong style="color: #fff;">"Otra vez será"</strong>.</p>
-            <div style="height: 1px; background: #24344d; margin: 1.25rem 0;"></div>
-            <h3 class="lucky-title" style="margin: 0 0 0.5rem 0; font-size: 1.2rem;">¡ESPERA UN MOMENTO! ⚡</h3>
-            <p>¡El radar de Fito, S.L. se ha vuelto loco! Te regalamos una **segunda tirada extra** inmediata.</p>
-            <button class="modal-btn" onclick="closeModal('modal-sad')">Aprovechar Suerte 🍀</button>
+            <p>Mala suerte, ha tocado: <strong>"Otra vez será"</strong>.</p>
+            <div style="height: 1px; background: #e2e8f0; margin: 1rem 0;"></div>
+            <h3 class="lucky-title" style="margin-bottom:0.5rem;">¡ESPERA UN MOMENTO! ⚡</h3>
+            <p>¡El sistema de Fito, S.L. ha detectado una anomalía climática veraniega... **¡TIENES UNA SEGUNDA TIRADA EXTRA INMEDIATA!**</p>
+            <button class="modal-btn" onclick="closeModal('modal-sad')">Girar otra vez 🎁</button>
         </div>
     </div>
 
     <div id="modal-win" class="modal">
         <div class="modal-content">
             <h2 class="lucky-title">¡BRUTAL! 🎉</h2>
-            <p>¡La suerte ha cambiado por completo! Te llevas:</p>
-            <h1 style="margin: 0.25rem 0; font-size: 2.8rem; color: #fff;">1.000€</h1>
-            <p style="font-size: 0.9rem; color: #64748b;">Premio veraniego garantizado</p>
+            <p>¡La segunda tirada ha sido la vencida! Te llevas:</p>
+            <h1 style="margin: 0.25rem 0; font-size: 3rem;">1.000€</h1>
+            <p>En efectivo para gastar este verano.</p>
             
             <div id="prize-image-container">
-                <div id="fallback-prize" class="fallback-card">
-                    <div class="icon">💰💵</div>
-                    <span>¡Tus 1000€ listos!</span>
-                </div>
+                <span id="error-image-msg">¡Disfruta de tus 1000€!</span>
                 <img id="prize-img" alt="Premio 1000 euros de Fito, S.L.">
             </div>
 
-            <button class="modal-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;" onclick="closeModal('modal-win')">Reclamar Premio 💸</button>
+            <button class="modal-btn" style="background-color: #15803d; color: white;" onclick="closeModal('modal-win')">¡Reclamar Premio!</button>
         </div>
     </div>
-
-    <footer>
-        &copy; 2026 by Fito, S.L. &bull; Todos los derechos reservados.
-    </footer>
 
     <script>
         const canvas = document.getElementById('wheel');
         const ctx = canvas.getContext('2d');
         const spinBtn = document.getElementById('spin-trigger');
 
-        // Configuración de premios estructurada para evitar cortes de texto
+        // Configuración de premios estructurada para que no se corten en móvil
         const prizes = [
-            { text: "Perrito Piloto", icon: "🐶" },
-            { text: "1.000€", icon: "💰" },
-            { text: "Piso Torrevieja", icon: "🏢" },
-            { text: "Ferrari", icon: "🏎️" },
-            { text: "Fanega Olivos", icon: "🫒" },
-            { text: "Kit Supervivencia", icon: "🎒" },
-            { text: "Otra vez será", icon: "❌" }
+            { text: "Perrito Piloto", icon: "🐶", color: '#f59e0b' },
+            { text: "1.000€", icon: "💰", color: '#15803d' },
+            { text: "Piso Torrevieja", icon: "🏢", color: '#00569e' },
+            { text: "Ferrari", icon: "🏎️", color: '#da291c' },
+            { text: "Fanega Olivos", icon: "🫒", color: '#a3e635' },
+            { text: "Kit Supervivencia", icon: "🎒", color: '#a3e635' }, // Duplicado para equilibrar (7 sectores)
+            { text: "Otra vez será", icon: "❌", color: '#da291c' }
         ];
 
-        // Paleta cromática estilo neón oscuro alternado de alta gama
-        const colors = ['#0f172a', '#1e1b4b', '#0f172a', '#2e1065', '#0f172a', '#172554', '#0f172a'];
+        // Paleta de colores Premium
+        const colors = ['#f59e0b', '#15803d', '#00569e', '#da291c', '#a3e635', '#a3e635', '#da291c'];
         const numSlices = prizes.length;
         const sliceAngle = (2 * Math.PI) / numSlices;
         let currentRotation = 0;
         let isFirstSpin = true;
 
-        // Dibujo optimizado para pantallas retina/móviles (Usa coordenadas 720x720 internas)
+        // Dibujar la ruleta nativamente
         function drawWheel() {
-            ctx.clearRect(0, 0, 720, 720);
-            const center = 360;
-            const radius = 345;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const center = canvas.width / 2;
+            const radius = canvas.width / 2 - 10;
 
             for (let i = 0; i < numSlices; i++) {
                 const angle = i * sliceAngle;
                 
-                // 1. Porción del círculo
+                // Porción
                 ctx.beginPath();
                 ctx.fillStyle = colors[i % colors.length];
                 ctx.moveTo(center, center);
                 ctx.arc(center, center, radius, angle, angle + sliceAngle);
                 ctx.lineTo(center, center);
                 ctx.fill();
-                
-                // Líneas divisorias estéticas
-                ctx.strokeStyle = '#1e293b';
-                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 1;
                 ctx.stroke();
 
-                // 2. Renderizado de textos e iconos (Rotados de forma limpia)
+                // Textos compactos con iconos
                 ctx.save();
                 ctx.translate(center, center);
                 ctx.rotate(angle + sliceAngle / 2);
                 ctx.textAlign = "right";
-                ctx.textBaseline = "middle";
-                
-                // Color destacado para premios especiales
-                if (prizes[i].text === "1.000€") {
-                    ctx.fillStyle = "#00f2fe";
-                } else if (prizes[i].text === "Otra vez será") {
-                    ctx.fillStyle = "#94a3b8";
-                } else {
-                    ctx.fillStyle = "#ffffff";
-                }
-
-                // Escribir Texto compacto + Icono para que entre perfectamente sin importar la resolución móvil
-                ctx.font = "bold 24px 'Segoe UI', system-ui, sans-serif";
-                ctx.fillText(prizes[i].text + " " + prizes[i].icon, radius - 35, 0);
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 13px system-ui";
+                ctx.fillText(prizes[i].text + " " + prizes[i].icon, radius - 30, 0);
                 ctx.restore();
             }
 
-            // Anillo exterior brillante
+            // Centro estético
             ctx.beginPath();
-            ctx.arc(center, center, radius, 0, 2 * Math.PI);
-            ctx.strokeStyle = '#24344d';
-            ctx.lineWidth = 6;
-            ctx.stroke();
-
-            // Botón/Eje central decorativo
-            ctx.beginPath();
-            ctx.arc(center, center, 55, 0, 2 * Math.PI);
-            ctx.fillStyle = '#0b0f19';
+            ctx.arc(center, center, 35, 0, 2 * Math.PI);
+            ctx.fillStyle = '#000000';
             ctx.fill();
-            ctx.strokeStyle = '#00f2fe';
-            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
             ctx.stroke();
-            
-            // Rayos en el centro
             ctx.fillStyle = '#ffffff';
-            ctx.font = "bold 24px sans-serif";
+            ctx.font = "bold 20px sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText("⚡", center, center);
         }
 
-        // Corrección de física angular (Puntero fijo a las 12 en punto)
+        // Corrección de física angular: El puntero está fijo en el NORTE (1.5 * Math.PI)
         function getAnglesForPrize(prizeIndex) {
             const prizeCenterAngle = (prizeIndex * sliceAngle) + (sliceAngle / 2);
             let targetAngle = (1.5 * Math.PI) - prizeCenterAngle;
@@ -440,41 +394,43 @@
                     document.getElementById('modal-sad').style.display = 'flex';
                     isFirstSpin = false;
                     spinBtn.disabled = false;
-                    spinBtn.innerText = "¡Girar de Nuevo! (Gratis)";
-                    spinBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
-                    spinBtn.style.boxShadow = "0 4px 20px rgba(16, 185, 129, 0.3)";
+                    spinBtn.innerText = "¡Tirar otra vez! (Gratis)";
+                    spinBtn.style.background = "#15803d";
+                    spinBtn.style.color = "white";
                 } else {
                     document.getElementById('modal-win').style.display = 'flex';
                     spinBtn.innerText = "¡Premio Entregado!";
                     tryLoadPrizeImage(); // Arrancar verificador inteligente de imagen
                 }
-            }, 4500);
+            }, 4500); // 4.5 segundos de giro
         }
 
         // Función inteligente para evitar que la imagen "no aparezca"
         function tryLoadPrizeImage() {
             const imgElement = document.getElementById('prize-img');
-            const fallbackElement = document.getElementById('fallback-prize');
+            const errMsg = document.getElementById('error-image-msg');
             
             // Lista de extensiones más probables para tu archivo "imagen"
-            const extensions = ['jpg', 'png', 'webp', 'jpeg'];
+            const extensions = ['jpg', 'png', 'webp'];
             let currentExtIndex = 0;
 
             function tryNext() {
                 if (currentExtIndex >= extensions.length) {
-                    // Si ya probó todas y ninguna cargó, mantenemos el Fallback visual decorativo activo
-                    console.log("No se encontró ningún archivo físico local con el nombre 'imagen'. Mostrando tarjeta de respaldo.");
+                    // Si ya probó todas y ninguna cargó, mostramos el mensaje de respaldo
+                    console.log("No se encontró ningún archivo físico local con el nombre 'imagen'.");
+                    errMsg.style.display = 'block';
+                    imgElement.style.display = 'none';
                     return;
                 }
                 
                 const testImg = new Image();
                 const ext = extensions[currentExtIndex];
-                testImg.src = `imagen.${ext}`;
+                testImg.src = `imagen.${ext}`; // Intenta cargar la imagen
                 
                 testImg.onload = function() {
                     // ¡Éxito! Encontró la imagen. Intercambiamos el diseño.
                     imgElement.src = this.src;
-                    fallbackElement.style.display = 'none';
+                    errMsg.style.display = 'none';
                     imgElement.style.display = 'block';
                 };
                 
@@ -493,8 +449,6 @@
         }
 
         spinBtn.addEventListener('click', spinWheel);
-        
-        // Render inicial
         drawWheel();
     </script>
 </body>
