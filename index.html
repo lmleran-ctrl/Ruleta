@@ -73,7 +73,7 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        /* NUEVO PANEL DE PREMIOS ILUMINADOS (GRID) */
+        /* PANEL DE PREMIOS ILUMINADOS (GRID) */
         #prize-panel-zone {
             flex: 1;
             display: flex;
@@ -91,7 +91,6 @@
             width: 100%;
         }
 
-        /* El último elemento ("Otra vez será") ocupará el ancho completo abajo */
         .grid-container .panel-item:last-child {
             grid-column: span 2;
         }
@@ -221,7 +220,7 @@
             cursor: pointer;
         }
 
-        /* PANTALLA COMPLETA TOTAL PARA EL PREMIO FINAL */
+        /* PANTALLA DE PREMIO REESTRUCTURADA */
         #fullscreen-win-overlay {
             display: none;
             position: fixed;
@@ -229,46 +228,111 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #000000;
+            background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
             z-index: 200;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: 4vh 4vw;
+            padding: 3vh 4vw;
         }
 
-        .win-image-container {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .win-foreground-content {
             width: 100%;
-            height: 100%;
-            z-index: 1;
+            max-width: 450px;
+            text-align: center;
+            margin-top: 10px;
         }
 
-        .win-image-container img {
+        .win-foreground-content h2 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #34d399;
+            text-transform: uppercase;
+        }
+
+        /* RECUADRO INTERMEDIO PARA LA IMAGEN CON EFECTO CLICKABLE */
+        .win-image-box {
+            width: 85vw;
+            height: 45vw;
+            max-width: 360px;
+            max-height: 200px;
+            background: #0f172a;
+            border: 4px solid var(--accent-yellow);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .win-image-box:hover {
+            transform: scale(1.03);
+            box-shadow: 0 20px 40px rgba(252, 211, 77, 0.2);
+        }
+
+        .win-image-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .win-foreground-content {
-            position: relative;
-            z-index: 2;
+        /* Pequeño indicador visual de "Pulsar para ampliar" */
+        .win-image-box::after {
+            content: "🔍 Toca para ampliar";
+            position: absolute;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            max-width: 500px;
-            text-align: center;
             background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            padding: 20px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 5px 0;
+            text-align: center;
+        }
+
+        /* LIGHTBOX PARA VER LA IMAGEN EN GRANDE */
+        #lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        #lightbox-overlay img {
+            max-width: 95%;
+            max-height: 85%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(255,255,255,0.1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ffffff;
+            color: #000000;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
         .claim-btn {
-            position: relative;
-            z-index: 2;
             width: 90%;
             max-width: 340px;
             padding: 16px;
@@ -280,7 +344,6 @@
             border-radius: 50px;
             cursor: pointer;
             text-transform: uppercase;
-            margin-top: auto;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
 
@@ -302,7 +365,8 @@
 
         <div id="prize-panel-zone">
             <div class="grid-container" id="panel-grid">
-                </div>
+                <!-- Se genera por JavaScript -->
+            </div>
         </div>
 
         <div id="control-zone">
@@ -311,6 +375,7 @@
         </div>
     </div>
 
+    <!-- MODAL 1: OTRA VEZ SERÁ -->
     <div id="sad-modal" class="modal-overlay">
         <div class="modal-card">
             <h3 style="color: #ef4444; margin-bottom: 10px;">¡Oh, qué lástima! 😢</h3>
@@ -322,19 +387,27 @@
         </div>
     </div>
 
+    <!-- PANTALLA DEL PREMIO CON RECUADRO INTEGRADO -->
     <div id="fullscreen-win-overlay">
-        <div class="win-image-container">
-            <img id="prize-full-img" alt="Premio Final">
-        </div>
-
         <div class="win-foreground-content">
             <h2>¡BRUTAL! 🎉</h2>
-            <p style="color: #f1f5f9; margin-top: 5px;">¡El panel se ha detenido en el mejor sitio!</p>
-            <h1 style="font-size: 3rem; font-weight: 900; color: #fff; margin: 10px 0; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">1.000€</h1>
-            <p style="color: #fcd34d; font-weight: bold;">En efectivo para disfrutar este verano</p>
+            <p style="color: #cbd5e1; margin-top: 5px;">¡El panel se ha detenido en el mejor sitio!</p>
+            <h1 style="font-size: 2.8rem; font-weight: 900; color: #fff; margin: 5px 0; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">1.000€</h1>
+            <p style="color: #fcd34d; font-weight: bold; margin-bottom: 15px;">En efectivo para disfrutar este verano</p>
+        </div>
+
+        <!-- RECUADRO CENTRAL PARA LA IMAGEN -->
+        <div class="win-image-box" onclick="openLightbox()">
+            <img id="prize-preview-img" alt="Vista previa del premio">
         </div>
 
         <button class="claim-btn" onclick="alert('¡Felicidades! Contacta con Fito, S.L. para gestionar tu premio.')">Reclamar Premio 💸</button>
+    </div>
+
+    <!-- LIGHTBOX (ZOOM AL PULSAR LA IMAGEN) -->
+    <div id="lightbox-overlay" onclick="closeLightbox()">
+        <div class="lightbox-close">✕</div>
+        <img id="lightbox-img" alt="Premio ampliado">
     </div>
 
     <script>
@@ -352,8 +425,9 @@
         ];
 
         let isFirstSpin = true;
+        let finalImageUrl = ""; // Guardará la ruta correcta encontrada de 'imagen'
 
-        // Generar elementos del panel visualmente claros
+        // Generar elementos del panel
         prizes.forEach((prize, index) => {
             const div = document.createElement('div');
             div.className = 'panel-item';
@@ -367,37 +441,29 @@
 
         function runIlluminationEffect(targetIndex, callback) {
             let currentIndex = 0;
-            let speed = 60; // Velocidad inicial rápida
+            let speed = 60;
             let steps = 0;
-            const totalSteps = 35 + targetIndex; // Cuántas vueltas de luces dará antes de frenar
+            const totalSteps = 35 + targetIndex;
 
             function cycle() {
-                // Quitar clase activa al anterior
                 document.querySelectorAll('.panel-item').forEach(el => el.classList.remove('active'));
-                
-                // Iluminar el actual
                 const currentEl = document.getElementById(`item-${currentIndex}`);
                 currentEl.classList.add('active');
 
                 steps++;
-                
-                // Avanzar en bucle sobre la lista
                 currentIndex = (currentIndex + 1) % prizes.length;
 
                 if (steps < totalSteps) {
-                    // Frenado progresivo al acercarse al final
                     if (totalSteps - steps < 10) {
                         speed += 45; 
                     }
                     setTimeout(cycle, speed);
                 } else {
-                    // Asegurar que el destino final se quede perfectamente iluminado fijo
                     document.querySelectorAll('.panel-item').forEach(el => el.classList.remove('active'));
                     document.getElementById(`item-${targetIndex}`).classList.add('active');
                     setTimeout(callback, 800);
                 }
             }
-
             cycle();
         }
 
@@ -415,7 +481,7 @@
                 if (isFirstSpin) {
                     document.getElementById('sad-modal').style.display = 'flex';
                 } else {
-                    showFinalWinScreen();
+                    preloadAndShowWinScreen();
                 }
             });
         }
@@ -428,16 +494,20 @@
             spinBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
         }
 
-        function showFinalWinScreen() {
+        // Buscar y comprobar la extensión de 'imagen' antes de mostrar la pantalla final
+        function preloadAndShowWinScreen() {
             const winOverlay = document.getElementById('fullscreen-win-overlay');
-            const imgElement = document.getElementById('prize-full-img');
+            const previewImg = document.getElementById('prize-preview-img');
+            const lightboxImg = document.getElementById('lightbox-img');
             
             const extensions = ['jpg', 'png', 'webp', 'jpeg'];
             let extIndex = 0;
 
-            function loadAndCheck() {
+            function checkNext() {
                 if (extIndex >= extensions.length) {
-                    document.querySelector('.win-image-container').style.background = "linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%)";
+                    // Respaldo visual si no se encuentra el archivo físico
+                    previewImg.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23fcd34d'><path d='M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99z'/></svg>";
+                    finalImageUrl = previewImg.src;
                     winOverlay.style.display = 'flex';
                     return;
                 }
@@ -446,17 +516,27 @@
                 testImg.src = `imagen.${extensions[extIndex]}`;
 
                 testImg.onload = function() {
-                    imgElement.src = this.src;
+                    finalImageUrl = this.src;
+                    previewImg.src = finalImageUrl;
+                    lightboxImg.src = finalImageUrl;
                     winOverlay.style.display = 'flex';
                 };
 
                 testImg.onerror = function() {
                     extIndex++;
-                    loadAndCheck();
+                    checkNext();
                 };
             }
+            checkNext();
+        }
 
-            loadAndCheck();
+        // Lógica del Lightbox (Zoom)
+        function openLightbox() {
+            document.getElementById('lightbox-overlay').style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox-overlay').style.display = 'none';
         }
 
         spinBtn.addEventListener('click', startGame);
