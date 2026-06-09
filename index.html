@@ -37,91 +37,103 @@
             align-items: center;
             justify-content: space-between;
             position: relative;
-            padding: 2vh 2vw env(safe-area-inset-bottom) 2vw;
-            
-            /* Degradado veraniego que simula la estética de la imagen original */
+            padding: 3vh 4vw env(safe-area-inset-bottom) 4vw;
             background: linear-gradient(180deg, #0284c7 0%, #0ea5e9 40%, #f59e0b 85%, #f97316 100%);
             background-size: cover;
             background-position: center;
         }
 
-        /* Cabecera estilizada y blindada contra solapamientos de texto */
+        /* Cabecera blindada contra solapamientos */
         #header-section {
             text-align: center;
             width: 100%;
             max-width: 600px;
-            padding: 10px;
-            z-index: 5;
         }
 
         .main-title {
-            font-size: min(2.5rem, 7vw);
+            font-size: min(2.3rem, 7.5vw);
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 1px;
             line-height: 1.1;
             text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            color: var(--text-light);
         }
 
         .main-title span {
             color: var(--accent-yellow);
-            display: inline-block;
         }
 
         .slogan {
-            font-size: min(1.1rem, 4vw);
+            font-size: min(1.05rem, 4vw);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-top: 5px;
+            margin-top: 6px;
             color: rgba(255, 255, 255, 0.9);
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        /* Área central adaptativa para la ruleta */
-        #wheel-zone {
+        /* NUEVO PANEL DE PREMIOS ILUMINADOS (GRID) */
+        #prize-panel-zone {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            max-height: 55vh;
+            max-width: 450px;
+            margin: 2vh 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+
+        /* El último elemento ("Otra vez será") ocupará el ancho completo abajo */
+        .grid-container .panel-item:last-child {
+            grid-column: span 2;
+        }
+
+        .panel-item {
+            background: rgba(15, 23, 42, 0.65);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 16px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
             position: relative;
-            z-index: 4;
+            transition: all 0.15s ease-in-out;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
 
-        .wheel-outer-box {
-            position: relative;
-            width: 85vw;
-            height: 85vw;
-            max-width: 380px;
-            max-height: 380px;
-            aspect-ratio: 1 / 1;
+        .panel-item .icon {
+            font-size: 2rem;
+            margin-bottom: 6px;
         }
 
-        /* Puntero/Flecha indicadora superior */
-        #wheel-pointer {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 18px solid transparent;
-            border-right: 18px solid transparent;
-            border-top: 28px solid #ef4444;
-            z-index: 10;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+        .panel-item .label {
+            font-size: min(1rem, 3.8vw);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #ffffff;
         }
 
-        #wheel-canvas {
-            width: 100% !important;
-            height: 100% !important;
-            border-radius: 50%;
-            box-shadow: 0 14px 28px rgba(0,0,0,0.35), 0 10px 10px rgba(0,0,0,0.3);
-            transition: transform 4.5s cubic-bezier(0.15, 0.85, 0.2, 1);
-            background-color: #ffffff;
+        /* EFECTO SELECCIONADO / ILUMINADO */
+        .panel-item.active {
+            background: #ffffff;
+            border-color: var(--accent-yellow);
+            transform: scale(1.05);
+            box-shadow: 0 0 25px var(--accent-yellow), inset 0 0 10px rgba(252, 211, 77, 0.5);
+        }
+        
+        .panel-item.active .label {
+            color: #0f172a;
         }
 
         /* Zona inferior de control */
@@ -130,12 +142,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 15px;
-            z-index: 5;
         }
 
         .action-btn {
-            width: 85vw;
+            width: 100%;
             max-width: 320px;
             padding: 16px 20px;
             font-size: min(1.25rem, 5vw);
@@ -148,17 +158,13 @@
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
         }
 
         .action-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 12px 24px rgba(0,0,0,0.4);
             filter: brightness(1.1);
-        }
-
-        .action-btn:active:not(:disabled) {
-            transform: translateY(1px);
         }
 
         .action-btn:disabled {
@@ -170,7 +176,7 @@
             transform: none;
         }
 
-        /* Ventanas emergentes / Modales */
+        /* Modales */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -195,26 +201,12 @@
             border-radius: 24px;
             padding: 30px 24px;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         @keyframes popIn {
             from { transform: scale(0.85); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-card h3 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-        }
-
-        .modal-card p {
-            font-size: 1.05rem;
-            color: #475569;
-            line-height: 1.5;
-            margin-bottom: 20px;
         }
 
         .modal-action-btn {
@@ -224,17 +216,12 @@
             font-weight: 700;
             border: none;
             border-radius: 14px;
-            background: #0084c7;
+            background: #10b981;
             color: #ffffff;
             cursor: pointer;
-            transition: background 0.2s;
         }
 
-        .modal-action-btn:hover {
-            background: #0284c7;
-        }
-
-        /* PANTALLA COMPLETA TOTAL PARA EL PREMIO FINAL ("imagen") */
+        /* PANTALLA COMPLETA TOTAL PARA EL PREMIO FINAL */
         #fullscreen-win-overlay {
             display: none;
             position: fixed;
@@ -248,15 +235,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 4vh 4vw;
-            animation: fadeIn 0.5s ease-in-out forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Contenedor adaptativo para que la imagen ocupe TODO el fondo */
         .win-image-container {
             position: absolute;
             top: 0;
@@ -264,45 +244,26 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1e293b;
         }
 
         .win-image-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Ocupa la pantalla completa adaptada sin deformarse */
+            object-fit: cover;
         }
 
-        /* Capa superior de textos informativos flotando sobre la imagen */
         .win-foreground-content {
             position: relative;
             z-index: 2;
             width: 100%;
             max-width: 500px;
             text-align: center;
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             padding: 20px;
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: auto;
-        }
-
-        .win-foreground-content h2 {
-            font-size: 2rem;
-            font-weight: 900;
-            color: #34d399;
-            text-transform: uppercase;
-        }
-
-        .win-foreground-content p {
-            font-size: 1.1rem;
-            color: #f1f5f9;
-            margin-top: 5px;
         }
 
         .claim-btn {
@@ -318,10 +279,9 @@
             border: 2px solid #ffffff;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             text-transform: uppercase;
-            letter-spacing: 1px;
             margin-top: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
 
         .copyright {
@@ -336,31 +296,29 @@
 
     <div id="app-container">
         <header id="header-section">
-            <h1 class="main-title">La Gran<br><span>Ruleta de Verano</span></h1>
+            <h1 class="main-title">La Gran<br><span>Lista de Premios</span></h1>
             <p class="slogan">Premios Increíbles</p>
         </header>
 
-        <div id="wheel-zone">
-            <div class="wheel-outer-box">
-                <div id="wheel-pointer"></div>
-                <canvas id="wheel-canvas" width="800" height="800"></canvas>
-            </div>
+        <div id="prize-panel-zone">
+            <div class="grid-container" id="panel-grid">
+                </div>
         </div>
 
         <div id="control-zone">
-            <button id="spin-btn" class="action-btn">¡Gira y Gana!</button>
+            <button id="spin-btn" class="action-btn">¡Pulsar y Ganar!</button>
             <p class="copyright">&copy; 2026 by Fito, S.L. &bull; Todos los derechos reservados.</p>
         </div>
     </div>
 
     <div id="sad-modal" class="modal-overlay">
         <div class="modal-card">
-            <h3 style="color: #ef4444;">¡Oh, qué lástima! 😢</h3>
+            <h3 style="color: #ef4444; margin-bottom: 10px;">¡Oh, qué lástima! 😢</h3>
             <p>Ha tocado: <strong style="color: #ef4444;">"Otra vez será"</strong>.</p>
             <div style="height: 1px; background: #e2e8f0; margin: 15px 0;"></div>
-            <h4 style="color: #10b981; font-weight: 800; font-size: 1.2rem; margin-bottom: 5px;">¡ATENCIÓN! ⚡</h4>
-            <p>Fito, S.L. premia tu fidelidad veraniega. ¡El sistema te concede una <strong>Segunda Tirada Extra de la Suerte</strong> totalmente gratis!</p>
-            <button class="modal-action-btn" style="background: #10b981;" onclick="closeSadModal()">Tirar de Nuevo 🎁</button>
+            <h4 style="color: #10b981; font-weight: 800; font-size: 1.2rem; margin-bottom: 5px;">¡UN MOMENTO! ⚡</h4>
+            <p style="margin-bottom: 20px;">Fito, S.L. no quiere que te vayas de vacío. ¡Te concedemos una **Segunda Oportunidad Extra** inmediata!</p>
+            <button class="modal-action-btn" onclick="closeSadModal()">Probar Suerte de Nuevo 🎁</button>
         </div>
     </div>
 
@@ -371,116 +329,79 @@
 
         <div class="win-foreground-content">
             <h2>¡BRUTAL! 🎉</h2>
-            <p>¡La segunda tirada ha sido mágica! Te has llevado el premio gordo:</p>
-            <h1 style="font-size: 3.2rem; font-weight: 900; color: #fff; margin-top: 5px; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">1.000€</h1>
+            <p style="color: #f1f5f9; margin-top: 5px;">¡El panel se ha detenido en el mejor sitio!</p>
+            <h1 style="font-size: 3rem; font-weight: 900; color: #fff; margin: 10px 0; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">1.000€</h1>
             <p style="color: #fcd34d; font-weight: bold;">En efectivo para disfrutar este verano</p>
         </div>
 
-        <button class="claim-btn" onclick="alert('¡Felicidades! Ponte en contacto con Fito, S.L. para tramitar tus 1000€.')">Reclamar Premio 💸</button>
+        <button class="claim-btn" onclick="alert('¡Felicidades! Contacta con Fito, S.L. para gestionar tu premio.')">Reclamar Premio 💸</button>
     </div>
 
     <script>
-        const canvas = document.getElementById('wheel-canvas');
-        const ctx = canvas.getContext('2d');
+        const gridContainer = document.getElementById('panel-grid');
         const spinBtn = document.getElementById('spin-btn');
 
-        // Configuración exacta de sectores coordinada con la paleta de colores original
         const prizes = [
-            { text: "Perrito Piloto", icon: "🐶", color: "#f59e0b" },
-            { text: "1.000€", icon: "💰", color: "#15803d" },
-            { text: "Piso Torrevieja", icon: "🏢", color: "#00569e" },
-            { text: "Ferrari", icon: "🏎️", color: "#da291c" },
-            { text: "Fanega Olivos", icon: "🫒", color: "#84cc16" },
-            { text: "Kit Supervivencia", icon: "🎒", color: "#06b6d4" },
-            { text: "Otra vez será", icon: "❌", color: "#475569" }
+            { text: "Perrito Piloto", icon: "🐶" },
+            { text: "1.000€", icon: "💰" },
+            { text: "Piso Torrevieja", icon: "🏢" },
+            { text: "Ferrari", icon: "🏎️" },
+            { text: "Fanega Olivos", icon: "🫒" },
+            { text: "Kit Supervivencia", icon: "🎒" },
+            { text: "Otra vez será", icon: "❌" }
         ];
 
-        const numSlices = prizes.length;
-        const sliceAngle = (2 * Math.PI) / numSlices;
-        let currentRotation = 0;
         let isFirstSpin = true;
 
-        // Renderizado del Canvas gráfico de la ruleta sin desbordamientos
-        function drawWheel() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const center = canvas.width / 2;
-            const radius = center - 20;
+        // Generar elementos del panel visualmente claros
+        prizes.forEach((prize, index) => {
+            const div = document.createElement('div');
+            div.className = 'panel-item';
+            div.id = `item-${index}`;
+            div.innerHTML = `
+                <div class="icon">${prize.icon}</div>
+                <div class="label">${prize.text}</div>
+            `;
+            gridContainer.appendChild(div);
+        });
 
-            for (let i = 0; i < numSlices; i++) {
-                const angle = i * sliceAngle;
-                
-                // Dibujar sector
-                ctx.beginPath();
-                ctx.fillStyle = prizes[i].color;
-                ctx.moveTo(center, center);
-                ctx.arc(center, center, radius, angle, angle + sliceAngle);
-                ctx.lineTo(center, center);
-                ctx.fill();
-                
-                // Ribete divisorio blanco
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 4;
-                ctx.stroke();
+        function runIlluminationEffect(targetIndex, callback) {
+            let currentIndex = 0;
+            let speed = 60; // Velocidad inicial rápida
+            let steps = 0;
+            const totalSteps = 35 + targetIndex; // Cuántas vueltas de luces dará antes de frenar
 
-                // Añadir los textos radiales adaptativos
-                ctx.save();
-                ctx.translate(center, center);
-                ctx.rotate(angle + sliceAngle / 2);
-                ctx.textAlign = "right";
-                ctx.textBaseline = "middle";
-                ctx.fillStyle = "#ffffff";
+            function cycle() {
+                // Quitar clase activa al anterior
+                document.querySelectorAll('.panel-item').forEach(el => el.classList.remove('active'));
                 
-                ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
-                ctx.shadowBlur = 4;
-                ctx.shadowOffsetX = 2;
-                ctx.shadowOffsetY = 2;
+                // Iluminar el actual
+                const currentEl = document.getElementById(`item-${currentIndex}`);
+                currentEl.classList.add('active');
 
-                ctx.font = "bold 26px var(--font-family)";
+                steps++;
                 
-                let displayText = prizes[i].text;
-                if (displayText.length > 14) {
-                    ctx.font = "bold 20px var(--font-family)";
+                // Avanzar en bucle sobre la lista
+                currentIndex = (currentIndex + 1) % prizes.length;
+
+                if (steps < totalSteps) {
+                    // Frenado progresivo al acercarse al final
+                    if (totalSteps - steps < 10) {
+                        speed += 45; 
+                    }
+                    setTimeout(cycle, speed);
+                } else {
+                    // Asegurar que el destino final se quede perfectamente iluminado fijo
+                    document.querySelectorAll('.panel-item').forEach(el => el.classList.remove('active'));
+                    document.getElementById(`item-${targetIndex}`).classList.add('active');
+                    setTimeout(callback, 800);
                 }
-                
-                ctx.fillText(displayText + " " + prizes[i].icon, radius - 40, 0);
-                ctx.restore();
             }
 
-            // Corona exterior circular
-            ctx.beginPath();
-            ctx.arc(center, center, radius, 0, 2 * Math.PI);
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 8;
-            ctx.stroke();
-
-            // Botón central con icono de rayo energético
-            ctx.beginPath();
-            ctx.arc(center, center, 60, 0, 2 * Math.PI);
-            ctx.fillStyle = '#ffffff';
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(center, center, 50, 0, 2 * Math.PI);
-            ctx.fillStyle = '#0f172a';
-            ctx.fill();
-            
-            ctx.fillStyle = '#fcd34d';
-            ctx.font = "bold 36px sans-serif";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText("⚡", center, center);
+            cycle();
         }
 
-        // Posicionamiento angular (Puntero fijo a las 12 en punto)
-        function getAnglesForPrize(prizeIndex) {
-            const prizeCenterAngle = (prizeIndex * sliceAngle) + (sliceAngle / 2);
-            let targetAngle = (1.5 * Math.PI) - prizeCenterAngle;
-            if (targetAngle < 0) targetAngle += 2 * Math.PI;
-            return targetAngle;
-        }
-
-        function spinWheel() {
+        function startGame() {
             spinBtn.disabled = true;
             let targetIndex;
 
@@ -490,30 +411,23 @@
                 targetIndex = prizes.findIndex(p => p.text === "1.000€");
             }
 
-            const targetAngle = getAnglesForPrize(targetIndex);
-            const extraTurns = 7 * 2 * Math.PI; 
-            
-            currentRotation += extraTurns + targetAngle - (currentRotation % (2 * Math.PI));
-            canvas.style.transform = `rotate(${currentRotation}rad)`;
-
-            setTimeout(() => {
+            runIlluminationEffect(targetIndex, () => {
                 if (isFirstSpin) {
                     document.getElementById('sad-modal').style.display = 'flex';
                 } else {
                     showFinalWinScreen();
                 }
-            }, 4500);
+            });
         }
 
         function closeSadModal() {
             document.getElementById('sad-modal').style.display = 'none';
             isFirstSpin = false;
             spinBtn.disabled = false;
-            spinBtn.innerText = "¡Tirada Extra de la Suerte! 🍀";
+            spinBtn.innerText = "¡Tirada de la Suerte! 🍀";
             spinBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
         }
 
-        // Carga y despliegue inteligente de la imagen a pantalla completa
         function showFinalWinScreen() {
             const winOverlay = document.getElementById('fullscreen-win-overlay');
             const imgElement = document.getElementById('prize-full-img');
@@ -523,7 +437,6 @@
 
             function loadAndCheck() {
                 if (extIndex >= extensions.length) {
-                    console.log("Mostrando interfaz limpia de premio.");
                     document.querySelector('.win-image-container').style.background = "linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%)";
                     winOverlay.style.display = 'flex';
                     return;
@@ -546,8 +459,7 @@
             loadAndCheck();
         }
 
-        spinBtn.addEventListener('click', spinWheel);
-        drawWheel();
+        spinBtn.addEventListener('click', startGame);
     </script>
 </body>
 </html>
